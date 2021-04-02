@@ -25,5 +25,6 @@ Requires
 - scipy
 - mss
 - pyqtgraph
+- PyQt5
 
-
+[Anaconda](https://www.anaconda.com/products/individual#Downloads) is probably the easiest way to get started with these.
