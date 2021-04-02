@@ -142,7 +142,6 @@ def update():
     global last_ss, last_plot, signal, plt, imv, app
     ss = get_ss()
     signal.append(-ss.mean())
-    signal = signal[-5000:]
 
     now = pg.ptime.time()
     if now - last_ss > 5:
@@ -151,9 +150,9 @@ def update():
     if now - last_plot > 0.2:
         last_plot = now
         sig = quantize_signal(signal)
-        plt.plot(sig.astype(int), clear=True)
+        plt.plot(sig.astype(int)[-5000:], clear=True)
         message = decode_signal(analyze_signal(sig))
-        plt.setTitle(message[-100:])
+        plt.setTitle(message[-80:])
 
 timer = pg.QtCore.QTimer()
 timer.timeout.connect(update)
