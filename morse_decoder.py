@@ -106,7 +106,7 @@ def get_letter(pips):
 
 
 def update_screenshot():
-    ss = np.array(sct.grab({'top': 0, 'left': 0, 'width': 1000, 'height': 1000}))[..., :3]
+    ss = np.array(sct.grab(sct.monitors[0]))[..., :3]
     img.setImage(ss.transpose(1, 0, 2), autoLevels=False)
 
 def reset_signal():
@@ -116,17 +116,18 @@ def reset_signal():
 
 win = pg.GraphicsLayoutWidget()
 win.show()
-win.resize(500, 800)
+win.resize(600, 700)
 
 view = win.addViewBox(0, 0)
 img = pg.ImageItem()
 img.setLevels([0, 255])
 view.addItem(img)
 view.setAspectLocked()
-view.setRange(xRange=[0, 1000], yRange=[0, 1000])
+mon = sct.monitors[0]
+view.setRange(xRange=[0, mon['width']], yRange=[0, mon['height']])
 view.invertY()
 
-roi = pg.RectROI([0, 0], [20, 20], pen='r')
+roi = pg.RectROI([0, 0], [200, 200], pen='r')
 roi.sigRegionChangeFinished.connect(reset_signal)
 view.addItem(roi)
 
@@ -134,21 +135,21 @@ plt = win.addPlot(1, 0)
 plt.setMaximumHeight(200)
 
 
-last_ss = pg.ptime.time()
+last_ss = 0
+last_plot = 0
 
 def update():
-    global last_ss, signal, plt, imv, app
-    now = pg.ptime.time()
-    sleep = 0.02 - (now - last_ss)
-    if sleep > 0:
-        time.sleep(sleep)
-    last_ss = now
+    global last_ss, last_plot, signal, plt, imv, app
     ss = get_ss()
     signal.append(-ss.mean())
+    signal = signal[-5000:]
 
-    if len(signal) % 100 == 0:
-        #imv.setImage(ss)
+    now = pg.ptime.time()
+    if now - last_ss > 5:
+        last_ss = now
         update_screenshot()
+    if now - last_plot > 0.2:
+        last_plot = now
         sig = quantize_signal(signal)
         plt.plot(sig.astype(int), clear=True)
         message = decode_signal(analyze_signal(sig))
