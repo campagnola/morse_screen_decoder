@@ -4,6 +4,8 @@ Morse Screen Decoder
 Select a region of your screen that is flashing, decode morse from the flashes. 
 The decoder assumes a very good encoding; probably won't work for human-generated morse.
 
+Inspired by https://xkcd.com/2445/
+
 Instructions
 ------------
 
