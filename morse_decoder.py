@@ -34,7 +34,7 @@ def analyze_signal(sig):
         changes = changes[1:]
     
     intervals = np.diff(changes)
-    short = scipy.stats.mode(intervals).mode.mean()
+    short = scipy.stats.scoreatpercentile(intervals, 20)
     lengths = np.round(intervals / short)
     return lengths
 
@@ -82,11 +82,26 @@ morse = {
     '-..-': 'x',
     '-.--': 'y',
     '--..': 'z',
+
     '.-.-.-': '.',
     '--..--': ',',
     '..--..': '?',
+    '.----.': "'",
+    '-.-.--': '!',
     '-..-.': '/',
+    '-.--.': '(',
+    '-.--.-': ')',
+    '.-...': '&',
+    '---...': ':',
+    '-.-.-.': ';',
+    '-...-': '=',
+    '.-.-.': '+',
+    '-....-': '-',
+    '..--.-': '_',
+    '.-..-.': '"',
+    '...-..-': '$',
     '.--.-.': '@',
+
     '.----': '1',
     '..---': '2',
     '...--': '3',
